@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -12,6 +12,30 @@ import { RouterOutlet } from '@angular/router';
   `,
   styles: [],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'RXJS';
+
+  minhaPromisse(nome: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+
+      if (nome === "mauro") {
+        setTimeout(() => {
+          resolve("Seja bem vindo " + nome)
+        }, 1000);
+      } else {
+        reject("Ops! Você não é mauro")
+      }
+    });
+  }
+
+  // ngOnInit é o primeiro metodo chamado apos o contrutor
+  ngOnInit(): void {
+
+    // sucesso
+    //this.minhaPromisse("mauro").then(result => console.log(result));
+
+    this.minhaPromisse("nomeErrado")
+      .then(result => console.log(result))
+      .catch(error => console.log(error));
+  }
 }
