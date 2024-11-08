@@ -48,6 +48,39 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+  userObservable(nome: string, email: string): Observable<Usuario> {
+    return new Observable(subscriber => {
+      if (nome === "Admin") {
+        let user = new Usuario(nome, email);
+
+        setTimeout(() => {
+          subscriber.next(user);
+        }, 1000);
+
+        setTimeout(() => {
+          subscriber.next(user);
+        }, 2000);
+
+        setTimeout(() => {
+          subscriber.next(user);
+        }, 3000);
+
+        setTimeout(() => {
+          subscriber.next(user);
+        }, 4000);
+
+        setTimeout(() => {
+          subscriber.complete();
+        }, 5000);
+
+      } else {
+        subscriber.error("Ops! deu erro!")
+        subscriber.complete();
+      }
+    });
+  }
+
   // ngOnInit é o primeiro metodo chamado apos o contrutor
   ngOnInit(): void {
 
@@ -67,11 +100,30 @@ export class AppComponent implements OnInit {
 
     // next, error, complete precisa seguir os nomes corretos
     const observer = {
-      next: (valor: any) => console.log("next " + valor),
+      next: (valor: any) => console.log("next " + valor.nome + " " + valor.email),
       error: (error: any) => console.log("error " + error),
       complete: () => console.log('Completed')
     };
-    
-    this.minhaObservable('maurok').subscribe(observer);
+
+
+    const obs = this.userObservable("Admin", "email");
+    const sub = obs.subscribe(observer);
+
+    setTimeout(() => {
+      sub.unsubscribe();
+    }, 3500);
+
+
+    // this.minhaObservable('maurok').subscribe(observer);
   }
+}
+
+export class Usuario {
+
+  constructor(nome: string, email: string) {
+    this.nome = nome;
+    this.email = email;
+  }
+  nome: string;
+  email: string;
 }
