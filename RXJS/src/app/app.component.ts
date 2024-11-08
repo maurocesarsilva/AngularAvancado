@@ -37,7 +37,6 @@ export class AppComponent implements OnInit {
 
         setTimeout(() => {
           subscriber.next('resposta com delay!');
-
           subscriber.complete();
 
         }, 3000);
@@ -60,10 +59,19 @@ export class AppComponent implements OnInit {
     //   .then(result => console.log(result))
     //   .catch(error => console.log(error));
 
-    this.minhaObservable('mauro').subscribe({
-      next: result => console.log(result),
-      error: error => console.log(error),
+    // this.minhaObservable('mauro').subscribe({
+    //   next: result => console.log(result),
+    //   error: error => console.log(error),
+    //   complete: () => console.log('Completed')
+    // });
+
+    // next, error, complete precisa seguir os nomes corretos
+    const observer = {
+      next: (valor: any) => console.log("next " + valor),
+      error: (error: any) => console.log("error " + error),
       complete: () => console.log('Completed')
-    });
+    };
+    
+    this.minhaObservable('maurok').subscribe(observer);
   }
 }
