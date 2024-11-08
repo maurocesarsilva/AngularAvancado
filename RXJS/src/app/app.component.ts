@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Observable, subscribeOn } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,15 +16,35 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'RXJS';
 
-  minhaPromisse(nome: string): Promise<string> {
-    return new Promise((resolve, reject) => {
+  // minhaPromisse(nome: string): Promise<string> {
+  //   return new Promise((resolve, reject) => {
 
+  //     if (nome === "mauro") {
+  //       setTimeout(() => {
+  //         resolve("Seja bem vindo " + nome)
+  //       }, 1000);
+  //     } else {
+  //       reject("Ops! Você não é mauro")
+  //     }
+  //   });
+  // }
+
+
+  minhaObservable(nome: string): Observable<string> {
+    return new Observable(subscriber => {
       if (nome === "mauro") {
+        subscriber.next('Olá!');
+
         setTimeout(() => {
-          resolve("Seja bem vindo " + nome)
-        }, 1000);
+          subscriber.next('resposta com delay!');
+
+          subscriber.complete();
+
+        }, 3000);
+
       } else {
-        reject("Ops! Você não é mauro")
+        subscriber.error("Ops! deu erro!")
+        subscriber.complete();
       }
     });
   }
@@ -34,8 +55,15 @@ export class AppComponent implements OnInit {
     // sucesso
     //this.minhaPromisse("mauro").then(result => console.log(result));
 
-    this.minhaPromisse("nomeErrado")
-      .then(result => console.log(result))
-      .catch(error => console.log(error));
+    //com tratativa de erro
+    // this.minhaPromisse("nomeErrado")
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log(error));
+
+    this.minhaObservable('mauro').subscribe({
+      next: result => console.log(result),
+      error: error => console.log(error),
+      complete: () => console.log('Completed')
+    });
   }
 }
